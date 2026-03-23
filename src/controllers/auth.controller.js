@@ -88,6 +88,7 @@ async function loginUserController(req, res) {
         token
     })
     
+    await emailService.loginAlertEmail(user.email,user.name)
 
 
 

@@ -91,5 +91,70 @@ async function registrationEmail(userEmail, name) {
 }
 
 
-module.exports = {registrationEmail}
+//login user email template
+async function loginAlertEmail(userEmail, name) {
+  // const { device, location, time, ipAddress } = loginDetails;
+  const subject = 'Security Alert: New Login to Fintech Core';
+  
+  const text = `Hello ${name},\n\nWe detected a new login to your Fintech Core account.\n\nDevice: \nLocation: \nTime: \nIP: \n\nIf this wasn't you, please secure your account immediately: https://yourfintech.com`;
+
+  const html = `
+    <div style="background-color: #f8f9fa; padding: 20px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+      <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 550px; background-color: #ffffff; border-radius: 12px; overflow: hidden; border: 1px solid #e1e4e8;">
+        
+        <!-- Security Header -->
+        <tr>
+          <td style="padding: 30px; text-align: center; background-color: #fdf2f2;">
+            <div style="font-size: 40px; margin-bottom: 10px;">🔐</div>
+            <h2 style="color: #d73a49; margin: 0; font-size: 22px; font-weight: 600;">New Login Detected</h2>
+          </td>
+        </tr>
+        
+        <!-- Content -->
+        <tr>
+          <td style="padding: 30px 40px; color: #24292e;">
+            <p style="font-size: 16px; margin-bottom: 20px;">Hi <strong>${name}</strong>,</p>
+            <p style="font-size: 14px; line-height: 1.5; color: #586069;">Your Fintech Core account was just accessed from a new device or location. Please review the details below:</p>
+            
+            <!-- Details Box -->
+            <div style="background-color: #f6f8fa; border-radius: 8px; padding: 20px; margin: 25px 0; border-left: 4px solid #0052cc;">
+              <table width="100%" style="font-size: 14px; color: #24292e;">
+                <tr><td style="padding: 5px 0; color: #6a737d;">Device:</td><td style="padding: 5px 0; font-weight: 600;">{device}</td></tr>
+                <tr><td style="padding: 5px 0; color: #6a737d;">Location:</td><td style="padding: 5px 0; font-weight: 600;">{location}</td></tr>
+                <tr><td style="padding: 5px 0; color: #6a737d;">Time:</td><td style="padding: 5px 0; font-weight: 600;">{time}</td></tr>
+                <tr><td style="padding: 5px 0; color: #6a737d;">IP Address:</td><td style="padding: 5px 0; font-family: monospace;">{ipAddress}</td></tr>
+              </table>
+            </div>
+            
+            <p style="font-size: 14px; text-align: center; margin-top: 30px;"><strong>Was this you?</strong></p>
+            <p style="font-size: 13px; color: #6a737d; text-align: center;">If yes, you can safely ignore this email. If not, please change your password immediately to protect your funds.</p>
+            
+            <!-- Secure Account Button -->
+            <table border="0" cellpadding="0" cellspacing="0" style="margin: 20px auto;">
+              <tr>
+                <td align="center" bgcolor="#d73a49" style="border-radius: 6px;">
+                  <a href="https://yourfintech.com" target="_blank" style="padding: 12px 24px; color: #ffffff; text-decoration: none; font-weight: bold; display: inline-block; font-size: 14px;">Secure My Account</a>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        
+        <!-- Footer -->
+        <tr>
+          <td style="padding: 20px; text-align: center; font-size: 11px; color: #959da5; background-color: #ffffff;">
+            Sent by Fintech Core Security Team <br>
+            To manage your alerts, visit your <a href="#" style="color: #0052cc; text-decoration: none;">Account Settings</a>.
+          </td>
+        </tr>
+      </table>
+    </div>
+  `;
+
+  await sendEmail(userEmail, subject, text, html);
+}
+
+
+
+module.exports = {registrationEmail,loginAlertEmail}
 
