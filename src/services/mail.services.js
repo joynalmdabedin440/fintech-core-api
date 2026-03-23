@@ -1,4 +1,4 @@
-require('dotenv').config();
+
 const nodemailer = require('nodemailer');
 
 const transporter = nodemailer.createTransport({
@@ -21,4 +21,32 @@ transporter.verify((error, success) => {
   }
 });
 
-module.exports = transporter;
+// Function to send email
+const sendEmail = async (to, subject, text, html) => {
+  try {
+    const info = await transporter.sendMail({
+      from: `"Fintech Core" <${process.env.EMAIL_USER}>`, // sender address
+      to, // list of receivers
+      subject, // Subject line
+      text, // plain text body
+      html, // html body
+    });
+
+    console.log('Message sent: %s', info.messageId);
+    console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
+  } catch (error) {
+    console.error('Error sending email:', error);
+  }
+};
+
+//Welcome email template
+async function registrationEmail(name, userEmail) {
+  const subject = 'Welcome to Fintech Core!';
+  const text = `Hello ${name},\n\nWelcome to Fintech Core! We're excited to have you on board. If you have any questions or need assistance, feel free to reach out to our support team.\n\nBest regards,\nThe Fintech Core Team`;
+  const html = `<p>Hello ${name},</p><p>Welcome to Fintech Core! We're excited to have you on board. If you have any questions or need assistance, feel free to reach out to our support team.</p><p>Best regards,<br>The Fintech Core Team</p>`;
+
+  await sendEmail(userEmail,subject,text,html)
+}
+
+module.exports = {registrationEmail}
+
