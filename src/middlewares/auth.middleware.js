@@ -3,19 +3,17 @@ const userModel = require("../models/user.model")
 
 async function authMiddleWare(req, res, next) {
     
-    const token = req.cookies.token 
+    const token = req.cookies.token || req.headers.authorization?.split(" ")[1]
 
     if (!token) {
         return res.status(401).json({
-            msg:"Unauthorized user"
+            msg:"Unauthorized user,token is missing"
         })
     }
 
     try {
-        const decoded = await jwt.verify(token,process.env.JWT_SECRET)
-        const user = await userModel.findOne({
-            id:decoded.id
-        },)
+        const decoded = jwt.verify(token,process.env.JWT_SECRET)
+        const user = await userModel.findById(decoded.id)
 
         req.user = user
         
