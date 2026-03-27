@@ -50,4 +50,7 @@ ledgerSchema.pre("deleteOne", preventLedgerModification)
 ledgerSchema.pre("deleteMany", preventLedgerModification)
 
 
+const ledgerModel = mongoose.model("ledger", ledgerSchema)
+
+module.exports=ledgerModel
 
