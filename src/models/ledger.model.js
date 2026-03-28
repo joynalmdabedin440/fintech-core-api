@@ -36,7 +36,7 @@ const ledgerSchema = new mongoose.Schema({
 
 })
 
-async function preventLedgerModification(params) {
+async function preventLedgerModification() {
     throw new Error("Ledger is immutable can not modify");
     
     
@@ -48,6 +48,7 @@ ledgerSchema.pre("updateOne", preventLedgerModification)
 ledgerSchema.pre("updateMany", preventLedgerModification)
 ledgerSchema.pre("deleteOne", preventLedgerModification)
 ledgerSchema.pre("deleteMany", preventLedgerModification)
+ledgerSchema.pre("findOneAndReplace",preventLedgerModification)
 
 
 const ledgerModel = mongoose.model("ledger", ledgerSchema)
