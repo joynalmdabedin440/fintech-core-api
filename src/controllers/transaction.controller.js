@@ -8,8 +8,9 @@ async function transactionController(req,res) {
         const transaction = await transactionModel.createTransaction(fromAccount, toAccount, amount, idempotencyKey)
         res.status(201).json(transaction)
 
-        
+
     } catch (error) {
+        
         res.status(500).json({ error: error.message })
     }
 }
