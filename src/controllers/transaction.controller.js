@@ -7,9 +7,7 @@ async function transactionController(req,res) {
     try {
         const transaction = await transactionModel.createTransaction(fromAccount, toAccount, amount, idempotencyKey)
        
-        console.log(transaction);
-        
-
+        res.status(201).json(transaction)
 
     } catch (error) {
         
