@@ -9,6 +9,7 @@ const router = express.Router()
  * create accounts
  * protected route
  */
-router.post("/",authMiddleWare.authMiddleWare,accountController.createAccountController)
+router.post("/", authMiddleWare.authMiddleWare, accountController.createAccountController)
+
 
 module.exports = router
