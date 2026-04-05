@@ -6,11 +6,11 @@ async function transactionController(req,res) {
 
     try {
         const transaction = await transactionModel.createTransaction(fromAccount, toAccount, amount, idempotencyKey)
+        const transaction = await transactionModel.createTransaction(fromAccount, toAccount, amount, idempotencyKey)
 
         
-       
 
-      
+    
         
 
 
