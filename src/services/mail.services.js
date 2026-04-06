@@ -193,8 +193,46 @@ async function transactionSuccessEmail(userEmail, name, transactionDetails) {
   await sendEmail(userEmail, subject, text, html);
 }
 
-//
+//transaction failure email template
+async function transactionFailureEmail(userEmail, name, transactionDetails) {
+  const subject = 'Transaction Failed: Fintech Core'; 
+  const text = `Hello ${name},\n\nUnfortunately, your recent transaction could not be completed.\n\nDetails:\nAmount: ${transactionDetails.amount}\nFrom: ${transactionDetails.fromAccount}\nTo: ${transactionDetails.toAccount}\n\nPlease check your account and try again. If you need assistance, contact our support team.`;    
+  const html = `
+    <div style="background-color: #ffe6e6; padding: 20px; font-family: 'Arial', sans-serif;">
+
+      <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px; background-color: #ffffff; border-radius: 8px; overflow: hidden; border: 1px solid #f5c6cb;">
+        <tr>
+          <td style="padding: 30px; text-align: center; background-color: #f5c6cb;">
+            <div style="font-size: 40px; margin-bottom: 10px;">❌</div>
+            <h2 style="color: #721c24; margin: 0; font-size: 22px;">Transaction Failed</h2>
+          </td>
+        </tr>
+        <tr>
+          <td style="padding: 30px; color: #721c24;">
+            <p style="font-size: 16px; margin-bottom: 20px;">Hi <strong>${name}</strong>,</p>
+            <p style="font-size: 14px; line-height: 1.5;">We regret to inform you that your recent transaction could not be processed. Please review the details below and try again:</p>
+            <ul style="font-size: 14px; color: #721c24; margin-left: 20px;">
+              <li><strong>Amount:</strong> ${transactionDetails.amount}</li>
+              <li><strong>From:</strong> ${transactionDetails.fromAccount}</li>
+              <li><strong>To:</strong> ${transactionDetails.toAccount}</li>
+            </ul>
+            <p style="font-size: 14px; margin-top: 20px;">If you continue to experience issues, please contact our support team for assistance.</p>
+          </td>
+        </tr>
+        <tr>
+          <td style="padding: 20px; text-align: center; font-size: 12px; color: #721c24; background-color: #f5c6cb;">
+            &copy; 2024 Fintech Core Team | 123 Finance Way, Tech City<br>
+            <a href="#" style="color: #721c24; text-decoration: none;">Contact Support</a>
+          </td>
+        </tr>
+      </table>
+    </div>
+  `;  
+  await sendEmail(userEmail, subject, text, html);
+}
 
 
-module.exports = {registrationEmail,loginAlertEmail,transactionSuccessEmail}
+
+
+module.exports = {registrationEmail,loginAlertEmail,transactionSuccessEmail,transactionFailureEmail}
 
