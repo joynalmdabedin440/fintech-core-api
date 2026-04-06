@@ -154,7 +154,47 @@ async function loginAlertEmail(userEmail, name) {
   await sendEmail(userEmail, subject, text, html);
 }
 
+//transaction success email template
+async function transactionSuccessEmail(userEmail, name, transactionDetails) {
+  const subject = 'Transaction Successful: Fintech Core'; 
+  const text = `Hello ${name},\n\nYour transaction was successful!\n\nDetails:\nAmount: ${transactionDetails.amount}\nFrom: ${transactionDetails.fromAccount}\nTo: ${transactionDetails.toAccount}\n\nThank you for using Fintech Core!`;
+
+  const html = `
+    <div style="background-color: #e6ffed; padding: 20px; font-family: 'Arial', sans-serif;">
+      <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px; background-color: #ffffff; border-radius: 8px; overflow: hidden; border: 1px solid #d4edda;">
+        <tr>
+          <td style="padding: 30px; text-align: center; background-color: #d4edda;">
+            <div style="font-size: 40px; margin-bottom: 10px;">✅</div>
+            <h2 style="color: #155724; margin: 0; font-size: 22px;">Transaction Successful</h2>
+          </td>
+        </tr>
+        <tr>
+          <td style="padding: 30px; color: #155724;">
+            <p style="font-size: 16px; margin-bottom: 20px;">Hi <strong>${name}</strong>,</p>
+            <p style="font-size: 14px; line-height: 1.5;">Your recent transaction was completed successfully. Here are the details:</p>
+            <ul style="font-size: 14px; color: #155724; margin-left: 20px;">
+              <li><strong>Amount:</strong> ${transactionDetails.amount}</li>
+              <li><strong>From:</strong> ${transactionDetails.fromAccount}</li>
+              <li><strong>To:</strong> ${transactionDetails.toAccount}</li>
+            </ul>
+            <p style="font-size: 14px; margin-top: 20px;">Thank you for choosing Fintech Core for your financial needs. We look forward to serving you again!</p>
+          </td>
+        </tr>
+        <tr>
+          <td style="padding: 20px; text-align: center; font-size: 12px; color: #155724; background-color: #d4edda;">
+            &copy; 2024 Fintech Core Team | 123 Finance Way, Tech City<br>
+            <a href="#" style="color: #155724; text-decoration: none;">View Transaction Details</a>
+          </td>
+        </tr>
+      </table>
+    </div>
+  `;
+
+  await sendEmail(userEmail, subject, text, html);
+}
+
+//
 
 
-module.exports = {registrationEmail,loginAlertEmail}
+module.exports = {registrationEmail,loginAlertEmail,transactionSuccessEmail}
 
