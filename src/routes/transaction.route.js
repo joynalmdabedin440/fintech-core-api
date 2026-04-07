@@ -9,7 +9,7 @@ const router = Router()
  * -create new transaction
  */
 
-router.post("/transaction", authMiddleware, transactionController)
+router.post("/transaction", authMiddleware.authMiddleWare, transactionController.createTransaction)
 
 
 module.exports = router
