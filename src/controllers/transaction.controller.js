@@ -34,6 +34,43 @@ async function createTransaction(req, res) {
         })
     }
 
+    //check valid idempotency key
+    const isExistIdempotencyKey = await transactionModel.findOne({
+        idempotencyKey:idempotencyKey
+    })
+
+    if (isExistIdempotencyKey) {
+        if( isExistIdempotencyKey.status === "COMPLETED" ) {
+            return res.status(200).json({
+                msg: "Transaction already completed",
+                status:"Success",
+                transaction: isExistIdempotencyKey
+            })
+        } else if (isExistIdempotencyKey.status === "PENDING") {
+            return res.status(200).json({
+                msg: "Transaction is pending",
+                status:"Success",
+                transaction: isExistIdempotencyKey
+            })
+        } else if (isExistIdempotencyKey.status === "FAILED") {
+            return res.status(200).json({
+                msg: "Transaction already failed",
+                status:"Success",
+                transaction: isExistIdempotencyKey
+            })
+        } else if (isExistIdempotencyKey.status === "REVERSED") {
+            return res.status(200).json({
+                msg: "Transaction already reversed",
+                status:"Success",
+                transaction: isExistIdempotencyKey
+            })
+
+        }
+        
+    }
+
+
+
       
 
     
