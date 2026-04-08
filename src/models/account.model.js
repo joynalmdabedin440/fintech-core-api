@@ -1,37 +1,80 @@
 const mongoose = require('mongoose');
+const ledgerModel = require("./ledger.model")
 
 const accountSchema = new mongoose.Schema({
     user: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'user',
         required: [true, "User required to create account"],
-        index:true
+        index: true
     },
-  
+
     status: {
         type: String,
         enum: {
             values: ["ACTIVE", "FROZEN", "CLOSED"],
             message: "Status Can be ACTIVE,FROZEN or CLOSED",
-            
+
         },
-        default:"ACTIVE"
+        default: "ACTIVE"
     },
     currency: {
         type: String,
         required: [true, "Currency is required for creating an account"],
-        default:"BDT"
+        default: "BDT"
     }
 
 }, {
-    timestamps:true
+    timestamps: true
 })
 
 accountSchema.index({
     user: 1,
-    status:1
+    status: 1
 })
+
+accountSchema.methods.getBalance = async function () {
+    const accountData = await ledgerModel.aggregate([
+        { $match: { account: this._id } },
+        {
+            $group: {
+                totalDebit: {
+                    $sum: {
+                        $cond: [
+                            { $eq: ["$type", "DEBIT"] },
+                            "$amount",
+                            0
+                        ]
+                    }
+                },
+                totalCredit: {
+                    $sum: {
+                        $cond: [
+                            { $eq: ["$type", "CREDIT"] },
+                            "$amount",
+                            0
+                            
+                        ]
+                    }
+                }
+            }
+        },
+        {
+            $project: {
+                _id: 0,
+                balance:{$subtract:["$totalCredit","$totalDebit"]}
+            }
+        }
+
+
+
+
+
+    ])
+
+
+}
 
 const accountModel = mongoose.model("account", accountSchema)
 
-module.exports= accountModel
+module.exports = accountModel
