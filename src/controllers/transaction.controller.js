@@ -9,71 +9,88 @@ async function createTransaction(req, res) {
     if (!fromAccount || !toAccount || !amount || !idempotencyKey) {
         return res.status(400).json({
             msg: "All fields are required",
-            status:"Failed"
+            status: "Failed"
         })
     }
 
     // valid account
     const fromUserAccount = await accountModel.findOne({
-        _id:fromAccount
+        _id: fromAccount
     })
     if (!fromUserAccount) {
         return res.status(400).json({
             msg: "Invalid fromAccount",
-            status:"Failed"
+            status: "Failed"
         })
     }
 
     const toUserAccount = await accountModel.findOne({
-        _id:toAccount
+        _id: toAccount
     })
     if (!toUserAccount) {
         return res.status(400).json({
             msg: "Invalid toAccount",
-            status:"Failed"
+            status: "Failed"
         })
     }
 
     //check valid idempotency key
-    const isExistIdempotencyKey = await transactionModel.findOne({
-        idempotencyKey:idempotencyKey
+    const isTransactionAlreadyExist = await transactionModel.findOne({
+        idempotencyKey: idempotencyKey
     })
 
-    if (isExistIdempotencyKey) {
-        if( isExistIdempotencyKey.status === "COMPLETED" ) {
+    if (isTransactionAlreadyExist) {
+        if (isTransactionAlreadyExist.status === "COMPLETED") {
             return res.status(200).json({
                 msg: "Transaction already completed",
-                status:"Success",
-                transaction: isExistIdempotencyKey
+                status: "Success",
+                transaction: isTransactionAlreadyExist
             })
-        } else if (isExistIdempotencyKey.status === "PENDING") {
+        } else if (isTransactionAlreadyExist.status === "PENDING") {
             return res.status(200).json({
                 msg: "Transaction is pending",
-                status:"Success",
-                transaction: isExistIdempotencyKey
+                status: "Success",
+                transaction: isTransactionAlreadyExist
             })
-        } else if (isExistIdempotencyKey.status === "FAILED") {
+        } else if (isTransactionAlreadyExist.status === "FAILED") {
             return res.status(200).json({
                 msg: "Transaction already failed",
-                status:"Success",
-                transaction: isExistIdempotencyKey
+                status: "Success",
+                transaction: isTransactionAlreadyExist
             })
-        } else if (isExistIdempotencyKey.status === "REVERSED") {
+        } else if (isTransactionAlreadyExist.status === "REVERSED") {
             return res.status(200).json({
                 msg: "Transaction already reversed",
-                status:"Success",
-                transaction: isExistIdempotencyKey
+                status: "Success",
+                transaction: isTransactionAlreadyExist
             })
 
         }
         
     }
 
+    /**
+     * Check account status
+     */
+
+    if (fromAccount.status !== "ACTIVE" || toAccount.status !== "ACTIVE") {
+        return res.status(400).json({
+            msg: "Both accounts must be active",
+            status: "Failed"
+        })
+        
+    }
+
+}
+
+
+
+
+
 
 
       
 
     
-}
 
 module.exports= {createTransaction}
