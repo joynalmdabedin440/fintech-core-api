@@ -34,7 +34,7 @@ accountSchema.index({
 })
 
 accountSchema.methods.getBalance = async function () {
-    const accountData = await ledgerModel.aggregate([
+    const balanceData = await ledgerModel.aggregate([
         { $match: { account: this._id } },
         {
             $group: {
@@ -66,11 +66,13 @@ accountSchema.methods.getBalance = async function () {
             }
         }
 
-
-
-
-
     ])
+
+    if (balanceData.length === 0) {
+        return 0
+    }
+
+    return balanceData[0].balance
 
 
 }
