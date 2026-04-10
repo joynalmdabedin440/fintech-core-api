@@ -1,5 +1,8 @@
 const transactionModel = require("../models/transaction.model")
-const accountModel=require("../models/account.model")
+const accountModel = require("../models/account.model")
+const mongoose =require("mongoose")
+const ledgerModel = require("../models/ledger.model")
+const mailService = require("../services/mail.services")
 
 async function createTransaction(req, res) {
     
@@ -81,17 +84,68 @@ async function createTransaction(req, res) {
         
     }
 
+    const balance = fromAccount.getBalance()
+    
+    if (balance < amount) {
+        return res.status(400).json({
+            msg: "Insufficient balance in fromAccount",
+            status: "Failed"
+        })  
+    }
+
+    const session = mongoose.startSession()
+
+    session.createTransaction()
+
+    const transaction = await transactionModel.create({
+        fromAccount,
+        toAccount,
+        amount,
+        idempotencyKey,
+        status:"PENDING"
+    }, { session })
+    
+    const debitLedgerEntry = await ledgerModel.create({
+        account: fromAccount,
+        amount: amount, 
+        types: "DEBIT",
+        transaction:transaction._id
+        
+        
+    },(session))
+    const creditLedgerEntry = await ledgerModel.create({
+        account: toAccount,
+        amount: amount, 
+        types: "CREDIT",
+        transaction:transaction._id
+        
+        
+    }, (session))
+    
+    
+
+    transaction.status = "COMPLETED"
+    await transaction.save({ session })
+    await session.commitTransaction()
+    session.endSession()
+
+    mailService.transactionSuccessEmail(req.user.email,req.user.name,transaction) 
+
+    return res.status(200).json({
+        msg: "Transaction completed successfully",
+        status: "Success",
+        transaction
+    })
+    
+
+
+
+
+
     
 
 }
 
-
-
-
-
-
-
-      
 
     
 

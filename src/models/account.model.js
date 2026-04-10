@@ -33,53 +33,50 @@ accountSchema.index({
     status: 1
 })
 
-// accountSchema.methods.getBalance = async function () {
-//     const balanceData = await ledgerModel.aggregate([
-//         { $match: { account: this._id } },
-//         {
-//             $group: {
-//                 totalDebit: {
-//                     $sum: {
-//                         $cond: [
-//                             { $eq: ["$type", "DEBIT"] },
-//                             "$amount",
-//                             0
-//                         ]
-//                     }
-//                 },
-//                 totalCredit: {
-//                     $sum: {
-//                         $cond: [
-//                             { $eq: ["$type", "CREDIT"] },
-//                             "$amount",
-//                             0
+accountSchema.methods.getBalance = async function () {
+    const balanceData = await ledgerModel.aggregate([
+        { $match: { account: this._id } },
+        {
+            $group: {
+                totalDebit: {
+                    $sum: {
+                        $cond: [
+                            { $eq: ["$type", "DEBIT"] },
+                            "$amount",
+                            0
+                        ]
+                    }
+                },
+                totalCredit: {
+                    $sum: {
+                        $cond: [
+                            { $eq: ["$type", "CREDIT"] },
+                            "$amount",
+                            0
                             
-//                         ]
-//                     }
-//                 }
-//             }
-//         },
-//         {
-//             $project: {
-//                 _id: 0,
-//                 balance:{$subtract:["$totalCredit","$totalDebit"]}
-//             }
-//         }
+                        ]
+                    }
+                }
+            }
+        },
+        {
+            $project: {
+                _id: 0,
+                balance:{$subtract:["$totalCredit","$totalDebit"]}
+            }
+        }
 
-//     ])
+    ])
 
-//     if (balanceData.length === 0) {
-//         return 0
-//     }
+    if (balanceData.length === 0) {
+        return 0
+    }
 
-//     return balanceData[0].balance
+    return balanceData[0].balance
 
 
-// }
-
-accountSchema.methods.getBalance= async function () {
-    
 }
+
 
 const accountModel = mongoose.model("account", accountSchema)
 
