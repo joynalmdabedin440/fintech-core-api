@@ -12,7 +12,7 @@ const router = Router()
 router.post("/transaction", authMiddleware.authMiddleWare, transactionController.createTransaction)
 
 //initial fund transaction
-router.post("/system/initial-fund", authMiddleware.authMiddleWare, transactionController.createInitialFundTransaction)
+router.post("/system/initial-fund", authMiddleware.authSystemUserMiddleWare, transactionController.createInitialFundTransaction)
 
 
 module.exports = router
