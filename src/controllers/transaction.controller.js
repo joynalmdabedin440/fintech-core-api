@@ -167,9 +167,48 @@ async function createInitialFundTransaction(req, res) {
             status: "Failed"
         })
     }
-    
-    
+
+    const fromAccount = await accountModel.findOne({
+        systemAccount: true,
+        user: req.user._id
+    })
+
+    if (!fromAccount) {
+        return res.status(400).json({
+            msg: "Invalid fromAccount",
+            status: "Failed"
+        })
+    }
+
+    const session = await mongoose.startSession()
+    session.startTransaction()
+
+    const transaction = await transactionModel.create({
+        fromAccount: fromAccount._id,
+        toAccount: toUserAccount._id,   
+        amount,
+        idempotencyKey,
+        status:"PENDING"
+    }, { session })
+    const debitLedgerEntry = await ledgerModel.create({
+        account: fromAccount._id,
+        amount: amount, 
+        types: "DEBIT",
+        transaction: transaction._id     
+    }, { session })
+    const creditLedgerEntry = await ledgerModel.create({
+        account: toUserAccount._id,
+        amount: amount, 
+        types: "CREDIT",
+        transaction: transaction._id     
+    }, { session })
+
+    transaction.status = "COMPLETED"
+    await transaction.save({ session })
+    await session.commitTransaction()
+    session.endSession()
+
+
 }
-    
 
 module.exports= {createTransaction, createInitialFundTransaction}
