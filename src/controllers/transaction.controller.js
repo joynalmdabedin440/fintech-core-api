@@ -158,9 +158,15 @@ async function createInitialFundTransaction(req, res) {
         })
     }
 
+    
+    
+
     const toUserAccount = await accountModel.findOne({
         _id: toAccount
     })
+    console.log(toUserAccount);
+    
+
     if (!toUserAccount) {
         return res.status(400).json({
             msg: "Invalid toAccount",

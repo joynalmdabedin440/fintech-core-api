@@ -9,7 +9,7 @@ const router = Router()
  * -create new transaction
  */
 
-router.post("/transaction", authMiddleware.authMiddleWare, transactionController.createTransaction)
+router.post("/", authMiddleware.authMiddleWare, transactionController.createTransaction)
 
 //initial fund transaction
 router.post("/system/initial-fund", authMiddleware.authSystemUserMiddleWare, transactionController.createInitialFundTransaction)
