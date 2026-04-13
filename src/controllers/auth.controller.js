@@ -97,7 +97,7 @@ async function loginUserController(req, res) {
     
 }
 
-const authMiddleWare = require("../middlewares/auth.middleware")
+
 
 
 module.exports={registerUserController,loginUserController}
