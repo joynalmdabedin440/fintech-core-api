@@ -14,4 +14,23 @@ async function createAccountController(req,res) {
     })
 }
 
-module.exports = { createAccountController }
+async function getAccountBalanceController(req,res) {
+    const accountId = req.params.accountId  
+    const account = await accountModel.findById(accountId)
+
+    if (!account) { 
+        return res.status(404).json({
+            msg: "Account not found",
+            status: "error"
+        })
+    }
+
+    res.status(200).json({
+        msg: "Account balance retrieved successfully",
+        balance: account.balance,
+        status: "success"
+    })
+}
+
+
+module.exports = { createAccountController, getAccountBalanceController }
