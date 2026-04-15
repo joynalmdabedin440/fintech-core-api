@@ -11,6 +11,7 @@ const router = express.Router()
  */
 router.post("/", authMiddleWare.authMiddleWare, accountController.createAccountController)
 
+
 // get balance of an account
 router.get("/:accountId/balance", authMiddleWare.authMiddleWare, accountController.getAccountBalanceController)
 
