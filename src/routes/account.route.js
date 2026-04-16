@@ -13,6 +13,6 @@ router.post("/", authMiddleWare.authMiddleWare, accountController.createAccountC
 
 
 // get balance of an account
-router.get("/:accountId/balance", authMiddleWare.authMiddleWare, accountController.getAccountBalanceController)
+router.get("/balance/:accountId", authMiddleWare.authMiddleWare, accountController.getAccountBalanceController)
 
 module.exports = router
