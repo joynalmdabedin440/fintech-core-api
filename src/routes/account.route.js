@@ -15,4 +15,6 @@ router.post("/", authMiddleWare.authMiddleWare, accountController.createAccountC
 // get balance of an account
 router.get("/balance/:accountId", authMiddleWare.authMiddleWare, accountController.getAccountBalanceController)
 
+router.get("/transactions/:accountId", authMiddleWare.authMiddleWare, accountController.getAccountTransactionsController)
+
 module.exports = router
