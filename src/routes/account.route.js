@@ -17,4 +17,6 @@ router.get("/balance/:accountId", authMiddleWare.authMiddleWare, accountControll
 
 router.get("/transactions/:accountId", authMiddleWare.authMiddleWare, accountController.getAccountTransactionsController)
 
+router.get("/all", authMiddleWare.authMiddleWare, accountController.getAllAccountsController)
+
 module.exports = router
